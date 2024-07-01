@@ -7,4 +7,4 @@ plugins {
 }
 
 includeBuild '../formula'
-includeBuild '../bin-cadical'
+includeBuild '../base'
