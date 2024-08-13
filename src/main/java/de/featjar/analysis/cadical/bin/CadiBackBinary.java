@@ -31,11 +31,11 @@ public class CadiBackBinary extends ABinary {
 
     @Override
     public String getExecutableName() {
-        return HostEnvironment.isWindows() ? "" : "cadiback";
+        return HostEnvironment.isWindows() ? "" : "bin/cadiback";
     }
 
     @Override
     public LinkedHashSet<String> getResourceNames() {
-        return HostEnvironment.isWindows() ? Sets.of("") : Sets.of("cadiback");
+        return HostEnvironment.isWindows() ? Sets.of("") : Sets.of("bin/cadiback");
     }
 }
