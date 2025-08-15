@@ -23,12 +23,13 @@ package de.featjar.analysis.cadical.cli;
 import de.featjar.analysis.cadical.computation.ComputeGetSolutionCadiCal;
 import de.featjar.base.cli.OptionList;
 import de.featjar.base.computation.IComputation;
-import de.featjar.formula.assignment.BooleanAssignment;
+import de.featjar.base.io.format.IFormat;
+import de.featjar.formula.assignment.BooleanAssignmentGroups;
 import de.featjar.formula.assignment.BooleanAssignmentList;
-import de.featjar.formula.assignment.BooleanSolution;
+import de.featjar.formula.io.csv.BooleanAssignmentGroupsUngroupedCSVFormat;
 import java.util.Optional;
 
-public class SolutionCommand extends ACadicalAnalysisCommand<BooleanSolution, BooleanAssignment> {
+public class SolutionCommand extends ACadicalAnalysisCommand<BooleanAssignmentGroups> {
 
     @Override
     public Optional<String> getDescription() {
@@ -36,14 +37,15 @@ public class SolutionCommand extends ACadicalAnalysisCommand<BooleanSolution, Bo
     }
 
     @Override
-    public IComputation<BooleanSolution> newAnalysis(
+    public IComputation<BooleanAssignmentGroups> newAnalysis(
             OptionList optionParser, IComputation<BooleanAssignmentList> formula) {
-        return formula.map(ComputeGetSolutionCadiCal::new);
+        return formula.map(ComputeGetSolutionCadiCal::new)
+                .mapResult(CoreCommand.class, "group", a -> new BooleanAssignmentGroups(variableMap, a));
     }
 
     @Override
-    public String printResult(BooleanSolution assignment) {
-        return assignment.print();
+    protected IFormat<BooleanAssignmentGroups> getOuputFormat(OptionList optionaParser) {
+        return new BooleanAssignmentGroupsUngroupedCSVFormat();
     }
 
     @Override

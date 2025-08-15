@@ -27,10 +27,10 @@ import de.featjar.base.computation.IComputation;
 import de.featjar.base.io.format.IFormat;
 import de.featjar.formula.assignment.BooleanAssignmentGroups;
 import de.featjar.formula.assignment.BooleanAssignmentList;
-import de.featjar.formula.io.csv.BooleanSolutionListCSVFormat;
+import de.featjar.formula.io.dimacs.BooleanAssignmentGroupsDimacsFormat;
 import java.util.Optional;
 
-public class AtomicSetsCommand extends ACadicalAnalysisCommand<BooleanAssignmentList, BooleanAssignmentList> {
+public class AtomicSetsCommand extends ACadicalAnalysisCommand<BooleanAssignmentGroups> {
 
     public static final Option<Boolean> OMIT_SINGLE_SETS = Option.newFlag("omit-singles")
             .setDefaultValue(Boolean.FALSE)
@@ -44,26 +44,17 @@ public class AtomicSetsCommand extends ACadicalAnalysisCommand<BooleanAssignment
     }
 
     @Override
-    public IComputation<BooleanAssignmentList> newAnalysis(
+    public IComputation<BooleanAssignmentGroups> newAnalysis(
             OptionList optionParser, IComputation<BooleanAssignmentList> formula) {
         return formula.map(ComputeAtomicCadiCal::new)
                 .set(ComputeAtomicCadiCal.OMIT_CORE, optionParser.get(OMIT_CORE))
-                .set(ComputeAtomicCadiCal.OMIT_SINGLE_SETS, optionParser.get(OMIT_SINGLE_SETS));
+                .set(ComputeAtomicCadiCal.OMIT_SINGLE_SETS, optionParser.get(OMIT_SINGLE_SETS))
+                .mapResult(AtomicSetsCommand.class, "group", BooleanAssignmentGroups::new);
     }
 
     @Override
-    protected Object getOuputObject(BooleanAssignmentList list) {
-        return new BooleanAssignmentGroups(list);
-    }
-
-    @Override
-    protected IFormat<?> getOuputFormat() {
-        return new BooleanSolutionListCSVFormat();
-    }
-
-    @Override
-    public String printResult(BooleanAssignmentList list) {
-        return list.print();
+    protected IFormat<BooleanAssignmentGroups> getOuputFormat(OptionList optionaParser) {
+        return new BooleanAssignmentGroupsDimacsFormat();
     }
 
     @Override
