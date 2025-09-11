@@ -61,7 +61,7 @@ public class ComputeAtomicCadiCal extends ACadiCalAnalysis<BooleanAssignmentList
         FeatJAR.log().debug(formula);
         VariableMap variableMap = formula.getVariableMap();
 
-        BitSet computedVariables = new BitSet(variableMap.getVariableCount() + 1);
+        BitSet computedVariables = new BitSet(variableMap.size() + 1);
         BooleanAssignment variables = VARIABLES_OF_INTEREST.get(dependencyList);
         if (variables.isEmpty()) {
             variables = variableMap.getVariables();
@@ -75,7 +75,7 @@ public class ComputeAtomicCadiCal extends ACadiCalAnalysis<BooleanAssignmentList
         solver.setTimeout(timeout);
         Result<BooleanAssignment> coreResult = solver.core();
         if (coreResult.isEmpty()) {
-            return coreResult.merge(Result.empty());
+            return coreResult.nullify();
         }
         BooleanAssignment core = coreResult.get();
         for (int l : core.get()) {
@@ -92,7 +92,7 @@ public class ComputeAtomicCadiCal extends ACadiCalAnalysis<BooleanAssignmentList
                 solver.setTimeout(timeout);
                 Result<BooleanAssignment> condionalCore1 = solver.core();
                 if (condionalCore1.isEmpty()) {
-                    return condionalCore1.merge(Result.empty());
+                    return condionalCore1.nullify();
                 }
                 formula.remove();
 
@@ -102,7 +102,7 @@ public class ComputeAtomicCadiCal extends ACadiCalAnalysis<BooleanAssignmentList
                     solver.setTimeout(timeout);
                     Result<BooleanAssignment> condionalCore2 = solver.core();
                     if (condionalCore2.isEmpty()) {
-                        return condionalCore2.merge(Result.empty());
+                        return condionalCore2.nullify();
                     }
                     formula.remove();
 
