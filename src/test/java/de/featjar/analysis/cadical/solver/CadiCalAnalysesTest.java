@@ -23,7 +23,7 @@ package de.featjar.analysis.cadical.solver;
 import de.featjar.AnalysisTest;
 import de.featjar.analysis.cadical.computation.ComputeCoreCadiCal;
 import de.featjar.analysis.cadical.computation.ComputeGetSolutionCadiCal;
-import de.featjar.formula.assignment.ComputeBooleanClauseList;
+import de.featjar.formula.assignment.conversion.ComputeBooleanClauseList;
 import org.junit.jupiter.api.Test;
 
 public class CadiCalAnalysesTest extends AnalysisTest {
