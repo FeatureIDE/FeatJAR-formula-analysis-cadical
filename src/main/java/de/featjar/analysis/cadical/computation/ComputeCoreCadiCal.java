@@ -20,14 +20,14 @@
  */
 package de.featjar.analysis.cadical.computation;
 
+import de.featjar.analysis.cadical.solver.CadiCalSolver;
 import de.featjar.base.computation.IComputation;
 import de.featjar.base.computation.Progress;
 import de.featjar.base.data.Result;
-import de.featjar.formula.assignment.BooleanAssignment;
 import de.featjar.formula.assignment.BooleanAssignmentList;
 import java.util.List;
 
-public class ComputeCoreCadiCal extends ACadiCalAnalysis<BooleanAssignment> {
+public class ComputeCoreCadiCal extends ACadiCalAnalysis<BooleanAssignmentList> {
 
     public ComputeCoreCadiCal(IComputation<BooleanAssignmentList> cnfFormula) {
         super(cnfFormula);
@@ -38,7 +38,11 @@ public class ComputeCoreCadiCal extends ACadiCalAnalysis<BooleanAssignment> {
     }
 
     @Override
-    public Result<BooleanAssignment> compute(List<Object> dependencyList, Progress progress) {
-        return initializeSolver(dependencyList).core();
+    public Result<BooleanAssignmentList> compute(List<Object> dependencyList, Progress progress) {
+        CadiCalSolver initializeSolver = initializeSolver(dependencyList);
+        return initializeSolver
+                .core()
+                .map(assignment ->
+                        new BooleanAssignmentList(initializeSolver.getFormula().getVariableMap(), assignment));
     }
 }
